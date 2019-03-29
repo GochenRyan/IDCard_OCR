@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import random
+import time
+
 import cv2
 import sys
 import math
@@ -91,7 +94,11 @@ def cropImgByBox(imgSrc, box):
     # 裁剪
     # cropImg = imgSrc[y1:y1 + hight, x1:x1 + width]
     cropImg = imgSrc[y1 - 4:y1 + hight + 4, x1 - 4:x1 + width + 4]
-    showImg(cropImg)
+    # showImg(cropImg)
+    # fileTime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
+    # saveTime = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())) + str(random.randint(0, 20))
+    # fileAddr = 'B:\\CropImg\\' + saveTime + '.jpg'
+    # cv2.imwrite(fileAddr, cropImg)
     return cropImg, (x1, y1), width, hight
 
 

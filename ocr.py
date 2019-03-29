@@ -39,7 +39,7 @@ if getattr(sys, 'frozen', False):
 elif __file__:
     curpath = os.path.dirname(os.path.realpath(__file__))
 
-pathtoimg = r'images\w5.jpg'
+pathtoimg = r'images\w9.jpg'
 if not os.path.isfile(pathtoimg):
     sys.exit("you need provid a valid imgfile")
     pass
@@ -169,7 +169,7 @@ def getChineseChar(img, kenalRect):
 
 def findChineseCharArea(cardNumPoint1, width, hight):
     """
-    根据身份证号码的位置推断姓名、性别、名族、出生年月、住址的位置
+    根据身份证号码的位置推断姓名、性别、民族、出生年月、住址的位置
     :param cardNumPoint1: tuple 身份证号码所处的矩形的左上角坐标
     :param width: int 身份证号码所处的矩形的宽
     :param hight: int 身份证号码所处的矩形的高
@@ -356,7 +356,7 @@ def detect(img):
                 newFile = os.path.join(curpath, path)
                 cv2.imwrite(newFile, cropImg)
 
-                return True, '', newFile
+                return True, '', newFile, ''
 
             # 画图
             if DEBUG:
@@ -366,12 +366,20 @@ def detect(img):
             # 裁剪后的图片5
             box = cv2.boxPoints(rect)
             box = np.int0(box)
+            # 寻找人脸区域
+            faceBox = cv2.boxPoints(rect)
+            faceBox = np.int0(faceBox)
+
             cropImg, point, width, hight = func.cropImgByBox(img, box)
             box = findChineseCharArea(point, width, hight)
+            faceBox = findFaceArea(point, width, hight)
             #cv2.drawContours(img, [box], 0, (0, 255, 0), 3)
 
             chiCharArea, point, width, hight = func.cropImgByBox(img, box)
             getChineseChar(chiCharArea, (kenalx, kenaly))
+
+            faceArea, _, _, _ = func.cropImgByBox(img, faceBox)
+            # func.showImg(faceArea)
 
             # winname = "身份证号码： %s" % (CARD_NUM)
             # cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
@@ -387,7 +395,7 @@ def detect(img):
 
     if notFound:
         #win32api.MessageBox(0, "无法识别，请换一个分辨率高点的照片~", "错误提示")
-        return False, '无法识别，请换一个分辨率高点的照片~", "错误提示', ''
+        return False, '无法识别，请换一个分辨率高点的照片~", "错误提示', '',''
 
 
     # 带轮廓的图片
@@ -417,9 +425,9 @@ def detect(img):
         if DEBUG:
             print info
 
-        return True, ret, ''
+        return True, ret, '', faceArea
     else:
-        return True, '', ''
+        return True, '', '', ''
 
 
 def calculateElement(img):
@@ -574,7 +582,7 @@ def fushiyupengzhang(pathtoimage):
             # 判断是腐蚀还是膨胀
 
 
-def  imgRotation(pathtoimg):
+def imgRotation(pathtoimg):
     #图片自动旋正
     from PIL import Image
     img = Image.open(pathtoimg)
@@ -613,6 +621,42 @@ def enhanceImage(pathtoimg):
     image_contrasted = enh_con.enhance(contrast)
     image_contrasted.show()
 
+def findFaceArea(cardNumPoint1, width, hight):
+    """
+    根据身份证号码的位置推断人脸的位置
+    :param cardNumPoint1: tuple 身份证号码所处的矩形的左上角坐标
+    :param width: int 身份证号码所处的矩形的宽
+    :param hight: int 身份证号码所处的矩形的高
+    :return:
+    """
+    #new_x = int(cardNumPoint1[0] - (width / 18) * 6)
+    new_x = cardNumPoint1[0] + (width / 18) * 9
+    new_width = int(width/5 * 3)
+
+    box = []
+    #new_y = cardNumPoint1[1] - hight * 6.5
+    card_hight = hight / (0.9044 - 0.7976)   #身份证高度
+    card_y_start = cardNumPoint1[1] - card_hight * 0.65 #粗略算出图像中身份证上边界的y坐标
+
+
+    #容错因子，防止矩形存在倾斜导致区域重叠
+    factor = 20
+
+    new_y = card_y_start if card_y_start > factor else factor
+
+    new_hight = card_hight * (0.7616 - 0.0967) + card_hight * 0.0967
+
+    #文字下边界坐标
+    new_y_low = (new_y + new_hight) if (new_y + new_hight) <= cardNumPoint1[1] - factor else cardNumPoint1[1] - factor
+
+    box.append([new_x, new_y])
+    box.append([new_x + new_width, new_y])
+    box.append([new_x + new_width, new_y_low])
+    box.append([new_x, new_y_low])
+
+    box = np.int0(box)
+    return box
+
 if __name__ == '__main__':
     # for i in range(31, 40):
     #     pathtoimg = r'D:\OCR\p\w%s.jpg' % (i)
@@ -625,12 +669,14 @@ if __name__ == '__main__':
     img = cv2.imread(pathtoimg)
 
     try:
-        ret, msg, path = detect(img)
+        ret, msg, path, faceArea = detect(img)
+        func.showImg(faceArea)
         print path
         if path != '':
             # 读取文件
             img = cv2.imread(path)
-            ret, msg, _ = detect(img)
+            ret, msg, _, faceArea = detect(img)
+            func.showImg(faceArea)
             os.unlink(path)
             if ret:
                 result = [{i: msg[i]} for i in range(len(msg))]
