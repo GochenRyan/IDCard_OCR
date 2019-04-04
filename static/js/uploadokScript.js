@@ -1,0 +1,10 @@
+var info = document.getElementById('idCard').getAttribute('d');
+obj = JSON.parse(info);
+document.getElementById('cardName').innerHTML = obj.name;
+document.getElementById('cardSex').innerHTML = obj.sex;
+document.getElementById('cardEthnicity').innerHTML = obj.ethnicity;
+document.getElementById('cardYear').innerHTML = obj.year;
+document.getElementById('cardMonth').innerHTML = obj.month;
+document.getElementById('cardDay').innerHTML = obj.day;
+document.getElementById('cardAddress').innerHTML = obj.address;
+document.getElementById('cardIDNumber').innerHTML = obj.id_number;

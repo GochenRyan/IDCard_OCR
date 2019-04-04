@@ -13,6 +13,9 @@ import sys
 import include.binaryzation as bz
 import include.functions as func
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 DEBUG = False
 
 CARD_NAME = ''
@@ -33,16 +36,16 @@ CARD_NUM = ''
 # parser.add_argument('image', help='path to image file')
 # args = parser.parse_args()
 
-curpath = ''
-if getattr(sys, 'frozen', False):
-    curpath = os.path.dirname(sys.executable)
-elif __file__:
-    curpath = os.path.dirname(os.path.realpath(__file__))
-
-pathtoimg = r'images\w9.jpg'
-if not os.path.isfile(pathtoimg):
-    sys.exit("you need provid a valid imgfile")
-    pass
+# curpath = ''
+# if getattr(sys, 'frozen', False):
+#     curpath = os.path.dirname(sys.executable)
+# elif __file__:
+#     curpath = os.path.dirname(os.path.realpath(__file__))
+#
+# pathtoimg = r'images\w9.jpg'
+# if not os.path.isfile(pathtoimg):
+#     sys.exit("you need provid a valid imgfile")
+#     pass
 
 def getCardNum(img, kenalRect):
     """
@@ -657,7 +660,7 @@ def findFaceArea(cardNumPoint1, width, hight):
     box = np.int0(box)
     return box
 
-if __name__ == '__main__':
+def idCardOCR(pathtoimg):
     # for i in range(31, 40):
     #     pathtoimg = r'D:\OCR\p\w%s.jpg' % (i)
     #     #pathtoimg = r'D:\OCR\p\sam_xie.jpg'
@@ -689,8 +692,10 @@ if __name__ == '__main__':
                 msg[0] = msg[0].replace('\n', '').replace('\f', '')
                 msg[6] = msg[6].replace('\n', '').replace('\f', '')
                 func.ver_addr(msg[6])
-                result = [{i: msg[i]} for i in range(len(msg))]
-                print json.dumps(result, ensure_ascii=False)
+                # result = [{i: msg[i]} for i in range(len(msg))]
+                result = {'name': msg[0], 'sex': msg[1], 'ethnicity': msg[2], 'year': int(msg[3]), 'month': int(msg[4]),
+                          'day': int(msg[5]), 'address': msg[6], 'id_number': msg[7]}
+                return result
             else:
                 print msg
     except Exception, e:
