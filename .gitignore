@@ -123,3 +123,6 @@ dmypy.json
 .pyre/
 
 .idea/
+
+# password
+local_config.py
