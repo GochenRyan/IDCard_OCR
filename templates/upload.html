@@ -3,33 +3,70 @@
 <head>
      <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <title>上传身份证</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/index.css">
+    <title>证件智能识别与检测系统</title>
 </head>
 <body>
-        <h1 class="text-center">证件信息智能识别与检测系统</h1>
-        <form action="" enctype='multipart/form-data' method='POST'>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 offset-md-4">
-                        <input type="file" class="form-control-file" name="file">
-                    </div>
+    <div class="container">
+        <div class="item-1 ">
+            <h1 style="color: white;" class="title1">证件智能识别与检测系统</h1>
+        </div>
+        <div class="item-2">
+            <form action="" enctype="multipart/form-data" method="post">
+                <div class="item2-1">
+                    <img id="previewImg" style="width: 450px; height: 200px">
                 </div>
-                <div class="row">
-                    <div class="col-md-4 offset-md-4">
-                        <button type="submit" class="btn btn-success btn-block">上传</button>
-                    </div>
+                <div class="item2-2">
+                    <button type="submit">上传</button>
                 </div>
+                <div class="item2-3">
+                    <input id="imgSelect" onchange="selectImg(this)" type="file" >
+                </div>
+            </form>
+        </div>
+        <div class="item-3">
+            <div class="item3-1">
+                <img src="">
             </div>
-
-        </form>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+            <div class="item3-2">
+                <button>解析</button>
+            </div>
+            <div class="item3-3">
+                <img src="">
+            </div>
+        </div>
+        <div class="item-4">
+            <div class="item4-1">
+                <h2>证件信息</h2>
+            </div>
+            <form>
+                <div class="item4-2">
+                    <span>姓名：</span><input type="text">
+                </div>
+                <div class="item4-3">
+                    <span>性别：</span><input type="text">
+                </div>
+                <div class="item4-4">
+                    <span>民族：</span><input type="text">
+                </div>
+                <div class="item4-5">
+                    <span>出生：</span><input type="text">年<input type="text">月<input type="text">日
+                </div>
+                <div class="item4-6">
+                    <span>地址：</span><input type="text">
+                </div>
+                <div class="item4-7">
+                    <span>ID号：</span><input type="text">
+                </div>
+                <div class="item4-8">
+                    <img src="">
+                </div>
+                <div class="item4-9">
+                    <button>修改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+<script src="../static/js/uploadokScript.js"></script>
 </body>
 </html>

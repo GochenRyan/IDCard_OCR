@@ -595,8 +595,8 @@ def ocr(imgSrc, lang=None, psm='3'):
         TESSERACT_OCR = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         subprocess.call([TESSERACT_OCR, unique_filename, unique_txt, '-l', lang, '--psm', psm], shell=True)
     elif (sysstr == "Linux"):
-        #TESSERACT_OCR = "/usr/local/bin/tesseract"
-        TESSERACT_OCR = "/usr/bin/tesseract"
+        TESSERACT_OCR = "/usr/local/bin/tesseract"
+        # TESSERACT_OCR = "/usr/bin/tesseract"
         if os.access(TESSERACT_OCR, os.X_OK):
             subprocess.call(TESSERACT_OCR + " "+ unique_filename + " "+  unique_txt + ' -l '+ lang +' --psm '+ str(psm), shell=True)
         else:

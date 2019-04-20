@@ -219,6 +219,7 @@ def detect(img):
     # 1.  转化成灰度图
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+    func.showImg(gray)
     # 2. 遍历二值化阈值算法
     algos = bz.myThreshold().getAlgos()
 
@@ -308,7 +309,7 @@ def detect(img):
     i = 1
     #形态学变换的预处理，得到可以查找矩形的图片
     dilation = preprocess(gray, algos[i])
-
+    func.showImg(dilation)
     # 3. 查找和筛选文字区域
     region = findTextRegion(dilation)
 
