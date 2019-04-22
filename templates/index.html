@@ -12,24 +12,22 @@
             <h1 style="color: white;" class="title1">证件智能识别与检测系统</h1>
         </div>
         <div class="item-2">
-            <form action="" enctype="multipart/form-data" method="post">
-                <div class="item2-1">
-                    <img id="previewImg" style="width: 450px; height: 200px">
-                </div>
-                <div class="item2-2">
-                    <button type="submit">上传</button>
-                </div>
-                <div class="item2-3">
-                    <input id="imgSelect" onchange="selectImg(this)" type="file" >
-                </div>
-            </form>
+            <div class="item2-1">
+                <img id="previewImg" style="width: 450px; height: 200px">
+            </div>
+            <div class="item2-2">
+                <button type="submit" id="imgUpload">上传</button>
+            </div>
+            <div class="item2-3">
+                <input id="imgSelect" onchange="selectImg(this)" type="file" name="file">
+            </div>
         </div>
         <div class="item-3">
             <div class="item3-1">
-                <img src="">
+                <img style="width: 450px; height: 200px">
             </div>
             <div class="item3-2">
-                <button>解析</button>
+                <button id="analysisBtn" disabled>解析</button>
             </div>
             <div class="item3-3">
                 <img src="">
@@ -67,6 +65,7 @@
             </form>
         </div>
     </div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="../static/js/uploadokScript.js"></script>
 </body>
 </html>
