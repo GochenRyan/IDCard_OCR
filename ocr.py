@@ -2,6 +2,8 @@
 import argparse
 # import win32api
 import copy
+import uuid
+
 import cv2
 import json
 # import imutils
@@ -671,16 +673,19 @@ def idCardOCR(pathtoimg):
 
     # 读取文件
     img = cv2.imread(pathtoimg)
+    # 相对路径，前端显示图片
+    faceAddr = os.path.join('static\\faces', str(uuid.uuid1()) + '.jpg')
 
     try:
         ret, msg, path, faceArea = detect(img)
         func.showImg(faceArea)
+        cv2.imwrite(faceAddr, faceArea)
         print path
         if path != '':
             # 读取文件
             img = cv2.imread(path)
             ret, msg, _, faceArea = detect(img)
-            func.showImg(faceArea)
+            cv2.imwrite(faceAddr,faceArea)
             os.unlink(path)
             if ret:
                 result = [{i: msg[i]} for i in range(len(msg))]
@@ -695,7 +700,7 @@ def idCardOCR(pathtoimg):
                 func.ver_addr(msg[6])
                 # result = [{i: msg[i]} for i in range(len(msg))]
                 result = {'name': msg[0], 'sex': msg[1], 'ethnicity': msg[2], 'year': int(msg[3]), 'month': int(msg[4]),
-                          'day': int(msg[5]), 'address': msg[6], 'id_number': msg[7]}
+                          'day': int(msg[5]), 'address': msg[6], 'id_number': msg[7], 'face': faceAddr}
                 return result
             else:
                 print msg

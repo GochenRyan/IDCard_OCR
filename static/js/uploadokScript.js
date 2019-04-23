@@ -76,3 +76,51 @@ $(function () {
         });
     });
 });
+
+$(function () {
+    $("#analysisBtn").click(function () {
+        $.ajax({
+            url:"/analysis/",
+            type: "POST",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                obj = JSON.parse(data);
+                $("#cardName").val(obj.name);
+                $("#cardSex").val(obj.sex);
+                $("#cardEthnicity").val(obj.ethnicity);
+                $("#cardYear").val(obj.year);
+                $("#cardMonth").val(obj.month);
+                $("#cardDay").val(obj.day);
+                $("#cardAddress").val(obj.address);
+                $("#cardIDNumber").val(obj.id_number);
+                $("#cardFace").attr("src",obj.face);
+                $("#modifyBtn").removeAttr("disabled");
+            },
+            error: function () {
+                alert("解析失败！");
+            }
+        });
+    });
+});
+
+$(function () {
+    $("#modifyBtn").click(function () {
+
+        $.ajax({
+            url:"/modify/",
+            type: "POST",
+            data: ,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+
+            },
+            error: function () {
+                alert("解析失败！");
+            }
+        });
+    });
+});
