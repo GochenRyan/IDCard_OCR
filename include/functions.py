@@ -201,7 +201,6 @@ def verticalProjection(BinaryImg, horiBoundaryCoor, LineNum, orginImg=None):
     :param LineNum:  #行序号 0：姓名  1：性别 名族  2：生日 >=3：住址
     :return:
     """
-    # showImg(BinaryImg)
     LineNum = 3 if LineNum >= 3 else LineNum
 
     switch={
@@ -566,14 +565,13 @@ def CardAddress(BinaryImg, horiBoundaryCoor, origin=None):
 
     return coors, text.replace(' ', '')
 
-def ocr(imgSrc, lang=None, psm='3'):
+def ocr(imgSrc, lang=None, psm='3', num = 0):
     """
     OCR 识别
     :param imgSrc:  图片资源
     :param lang:  语言包
     :return: 识别内容
     """
-
     curpath = ''
     if getattr(sys, 'frozen', False):
         curpath = os.path.dirname(sys.executable)
@@ -640,3 +638,19 @@ def getSexByCardNum(cardNum):
     else:
         return '男'
 
+def storePic(dirPath, picName, img):
+    """
+    存储用来展示的图片
+    :param str
+    :param picName
+    :param img
+    """
+    print picName
+    try:
+        path = os.path.join('static/analysisImgs/', dirPath)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        ana_path = os.path.join(path, picName + '.jpg')
+        cv2.imwrite(ana_path, img)
+    except Exception, e:
+        print e

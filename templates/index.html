@@ -4,12 +4,12 @@
      <!-- Required meta tags -->
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    <title>证件智能识别与检测系统</title>
+    <title>证件信息智能识别与检测系统</title>
 </head>
 <body>
     <div class="container">
         <div class="item-1 ">
-            <h1 style="color: white;" class="title1">证件智能识别与检测系统</h1>
+            <h1 style="color: white;" class="title1">证件信息智能识别与检测系统</h1>
         </div>
         <div class="item-2">
             <div class="item2-1">
@@ -24,7 +24,7 @@
         </div>
         <div class="item-3">
             <div class="item3-1">
-                <img style="width: 450px; height: 200px">
+                <img id="analysisImg" style="width: 450px; height: 200px">
             </div>
             <div class="item3-2">
                 <button id="analysisBtn" disabled>解析</button>
@@ -39,25 +39,25 @@
             </div>
             <form>
                 <div class="item4-2">
-                    <span>姓名：</span><input id="cardName" type="text">
+                    <span>姓名：</span><input id="cardName" type="text" style="width: 250px">
                 </div>
                 <div class="item4-3">
-                    <span>性别：</span><input id="cardSex" type="text">
+                    <span>性别：</span><input id="cardSex" type="text" style="width: 250px">
                 </div>
                 <div class="item4-4">
-                    <span>民族：</span><input id="cardEthnicity" type="text">
+                    <span>民族：</span><input id="cardEthnicity" type="text" style="width: 250px">
                 </div>
                 <div class="item4-5">
                     <span>出生：</span><input id="cardYear" type="text">年<input id="cardMonth" type="text">月<input id="cardDay" type="text">日
                 </div>
                 <div class="item4-6">
-                    <span>地址：</span><input id="cardAddress" type="text">
+                    <span>地址：</span><input id="cardAddress" type="text" style="width: 250px">
                 </div>
                 <div class="item4-7">
-                    <span>ID号：</span><input id="cardIDNumber" type="text">
+                    <span>ID号：</span><input id="cardIDNumber" type="text" style="width: 250px">
                 </div>
                 <div class="item4-8">
-                    <img id="cardFace" src="">
+                    <img id="cardFace" style="width: 100px; height: 100px;border-radius: 50%">
                 </div>
                 <div class="item4-9">
                     <button id="modifyBtn" disabled>修改</button>

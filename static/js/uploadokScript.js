@@ -15,6 +15,21 @@ if (typeof FileReader == 'undefined') {
     document.getElementById("imgSelect").setAttribute("disabled", "disabled");
 }
 
+// 生成uuid,用于区别
+function uuid() {
+    var s = [];
+    var hexDigits = "0123456789abcdef";
+    for (var i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+    }
+    s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[8] = s[13] = s[18] = s[23] = "-";
+
+    var uuid = s.join("");
+    return uuid;
+}
+
 //选择图片，马上预览
 function selectImg(obj) {
     var file = obj.files[0];
@@ -47,6 +62,8 @@ function selectImg(obj) {
     reader.readAsDataURL(file);
 }
 
+var UUID = uuid();
+
 $(function () {
     $("#imgUpload").click(function () {
         var fileObj = document.getElementById("imgSelect").files[0];    //js获取文件对象
@@ -55,6 +72,7 @@ $(function () {
         }
         var formFile = new FormData();
         formFile.append("file", fileObj);
+        formFile.append("uuid", UUID);
         $.ajax({
             url: "/upload/",
             type: "POST",
@@ -77,15 +95,37 @@ $(function () {
     });
 });
 
+var z = 0;
+
+function show(pic){
+    if(z < pic.length) {
+        $("#analysisImg").attr("src", pic[z]);
+        setTimeout(()=>show(pic),1000);
+    }
+    z++;
+
+}
+
 $(function () {
     $("#analysisBtn").click(function () {
         $.ajax({
             url:"/analysis/",
             type: "POST",
+            data: UUID,
             cache: false,
             contentType: false,
             processData: false,
             success: function (data) {
+                //显示解析图片
+                var path = "static\\analysisImgs\\".concat(UUID);
+                var pic = [path.concat("\\gray.jpg"),path.concat("\\binary.jpg"),path.concat("\\dilation.jpg"),path.concat("\\erosion.jpg"),path.concat("\\faceArea.jpg")];
+                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\gray.jpg"))}, 1000);
+                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\binary.jpg"))}, 1000);
+                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\dilation.jpg"))}, 1000);
+                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\erosion.jpg"))}, 1000);
+
+                show(pic);
+
                 obj = JSON.parse(data);
                 $("#cardName").val(obj.name);
                 $("#cardSex").val(obj.sex);
@@ -97,6 +137,7 @@ $(function () {
                 $("#cardIDNumber").val(obj.id_number);
                 $("#cardFace").attr("src",obj.face);
                 $("#modifyBtn").removeAttr("disabled");
+                $("#cardIDNumber").attr("readonly",true);
             },
             error: function () {
                 alert("解析失败！");
@@ -105,21 +146,25 @@ $(function () {
     });
 });
 
+
+
+
 $(function () {
     $("#modifyBtn").click(function () {
-
+        var info = JSON.stringify({"name":$("#cardName").val(),"sex":$("#cardSex").val(),"ethnicity":$("#cardEthnicity").val(),"year":$("#cardYear").val(),
+            "month":$("#cardMonth").val(),"day":$("#cardDay").val(), "address":$("#cardAddress").val(),"id_number":$("#cardIDNumber").val()});
         $.ajax({
             url:"/modify/",
             type: "POST",
-            data: ,
+            data: info,
             cache: false,
-            contentType: false,
+            contentType: 'application/json;charset=utf-8',
             processData: false,
-            success: function (data) {
-
+            success: function () {
+                alert("修改成功！");
             },
             error: function () {
-                alert("解析失败！");
+                alert("修改失败！");
             }
         });
     });

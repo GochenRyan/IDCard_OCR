@@ -49,7 +49,7 @@ CARD_NUM = ''
 #     sys.exit("you need provid a valid imgfile")
 #     pass
 
-def getCardNum(img, kenalRect):
+def getCardNum(num, dirUuid,img, kenalRect):
     """
     识别并提取身份证号码
     :return:
@@ -72,7 +72,7 @@ def getCardNum(img, kenalRect):
 
     return False
 
-def getChineseChar(img, kenalRect):
+def getChineseChar(dirUuid,img, kenalRect):
     """
     分析汉字区域，并识别提取
     :return:
@@ -131,6 +131,8 @@ def getChineseChar(img, kenalRect):
 
                 dilation = cv2.dilate(cb, kenal1, iterations=1)
                 erosion = cv2.erode(dilation, kenal2, iterations=1)
+                # func.showImg(erosion, 'erosion')
+                func.storePic(dirUuid, 'erosion', erosion)
                 # cv2.imwrite('E:\\Test\\0.png', erosion)
 
             # vertiCoors, text = func.verticalProjection(erosion, boundaryCoor, textLine, img)
@@ -210,7 +212,7 @@ def findChineseCharArea(cardNumPoint1, width, hight):
     box = np.int0(box)
     return box
 
-def detect(img):
+def detect(dirUuid,img):
 
     global CARD_NUM
 
@@ -220,8 +222,9 @@ def detect(img):
 
     # 1.  转化成灰度图
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # func.showImg(gray, 'gray')
+    func.storePic(dirUuid, 'gray', gray)
 
-    func.showImg(gray)
     # 2. 遍历二值化阈值算法
     algos = bz.myThreshold().getAlgos()
 
@@ -310,13 +313,16 @@ def detect(img):
 
     i = 1
     #形态学变换的预处理，得到可以查找矩形的图片
-    dilation = preprocess(gray, algos[i])
-    func.showImg(dilation)
+    dilation = preprocess(dirUuid, gray, algos[i])
+    # func.showImg(dilation, 'dilation')
+    func.storePic(dirUuid, 'dilation', dilation)
+
     # 3. 查找和筛选文字区域
     region = findTextRegion(dilation)
 
     # 4. 用绿线画出这些找到的轮廓
     angle = 0
+    num = 0
     for rect in region:
 
         angle = rect[2]
@@ -339,10 +345,10 @@ def detect(img):
         pts1 = np.float32(box)
         M = cv2.getPerspectiveTransform(pts1, pts2)
         cropImg = cv2.warpPerspective(img, M, (int(width), int(hight)))
-
         # 计算核大小
         kenalx = kenaly = int(math.ceil((hight / 100.0)))
-        CARD_NUM = getCardNum(cropImg, (kenalx, kenaly))
+        CARD_NUM = getCardNum(num, dirUuid, cropImg, (kenalx, kenaly))
+        num = num + 1
         if CARD_NUM:
             notFound = False
             #找到身份证号码，然后根据号码区域的倾斜角度，对原图进行旋转变换
@@ -382,10 +388,12 @@ def detect(img):
             #cv2.drawContours(img, [box], 0, (0, 255, 0), 3)
 
             chiCharArea, point, width, hight = func.cropImgByBox(img, box)
-            getChineseChar(chiCharArea, (kenalx, kenaly))
+            # func.showImg(chiCharArea, 'chiCharArea')
+            getChineseChar(dirUuid, chiCharArea, (kenalx, kenaly))
 
             faceArea, _, _, _ = func.cropImgByBox(img, faceBox)
-            # func.showImg(faceArea)
+            # func.showImg(faceArea, 'faceArea')
+            func.storePic(dirUuid, 'faceArea', faceArea)
 
             # winname = "身份证号码： %s" % (CARD_NUM)
             # cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
@@ -446,7 +454,7 @@ def calculateElement(img):
 
     return a
 
-def preprocess(gray, algoFunc):
+def preprocess(dirUuid, gray, algoFunc):
     # 1. Sobel算子，x方向求梯度
     #sobel = cv2.Sobel(gray, cv2.CV_8U, 1, 0, ksize = 3)
 
@@ -459,7 +467,8 @@ def preprocess(gray, algoFunc):
 
     # 2. 二值化
     ret, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
-
+    # func.showImg(binary, 'binary')
+    func.storePic(dirUuid, 'binary', binary)
     #获取核大小
     calculateElement(gray)
 
@@ -663,7 +672,7 @@ def findFaceArea(cardNumPoint1, width, hight):
     box = np.int0(box)
     return box
 
-def idCardOCR(pathtoimg):
+def idCardOCR(dirUuid, pathtoimg):
     # for i in range(31, 40):
     #     pathtoimg = r'D:\OCR\p\w%s.jpg' % (i)
     #     #pathtoimg = r'D:\OCR\p\sam_xie.jpg'
@@ -673,12 +682,12 @@ def idCardOCR(pathtoimg):
 
     # 读取文件
     img = cv2.imread(pathtoimg)
-    # 相对路径，前端显示图片
+    # 相对路径，存储前端显示图片
     faceAddr = os.path.join('static\\faces', str(uuid.uuid1()) + '.jpg')
 
+
     try:
-        ret, msg, path, faceArea = detect(img)
-        func.showImg(faceArea)
+        ret, msg, path, faceArea = detect(dirUuid, img)
         cv2.imwrite(faceAddr, faceArea)
         print path
         if path != '':

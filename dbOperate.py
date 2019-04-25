@@ -29,9 +29,9 @@ def inset_cardinfo(info):
 def update_cardinfo(info):
     db = connect_idcard_db()
     cursor = db.cursor()
-    sql = "UPDATE idcard.cardinfo SET idnumber=%s,name=%s,sex=%s,ethnicity=%s,year=%d,month=%d,day=%d,address=%s"%\
-          (info['id_number'], info['name'], info['sex'], info['ethnicity'], info['year'], info['month'], info['day'],
-           info['address'])
+    sql = "UPDATE idcard.cardinfo SET name='%s',sex='%s',ethnicity='%s',year='%d',month='%d',day='%d',address='%s' WHERE idnumber='%s'" % \
+          (info['name'], info['sex'], info['ethnicity'], info['year'], info['month'], info['day'],
+           info['address'],info['id_number'])
     try:
         cursor.execute(sql)
         db.commit()
