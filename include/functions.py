@@ -61,19 +61,34 @@ def is_identi_number(num):
     :return:
     """
     #print "card num:", num
-    chars = [chr(i) for i in range(88, 123)]
-    num = str(num).strip()
-
-    newNum = ''
-    for i in num:
-        if i in chars or is_number(i):
-            newNum += i
-
-    strlen = len(newNum)
-    if strlen == 18 or strlen == 15:
-        return newNum
-    else:
-        return  False
+    # chars = [chr(i) for i in range(88, 123)]
+    # num = str(num).strip()
+    #
+    # newNum = ''
+    # for i in num:
+    #     if i in chars or is_number(i):
+    #         newNum += i
+    #
+    # strlen = len(newNum)
+    # if strlen == 18 or strlen == 15:
+    #     return newNum
+    # else:
+    #     return  False
+    str_to_int = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'X': 10}
+    dict = {0: '1', 1: '0', 2: 'X', 3: '9', 4: '8', 5: '7', 6: '6', 7: '5', 8: '4', 9: '3', 10: '2'}
+    num = num.replace('\n', '').replace('\f', '')
+    if len(num) != 18:
+        print len(num),num
+        raise TypeError(u'请输入标准的第二代身份证号码！')
+    check_num = 0
+    for index, n in enumerate(num):
+        if index == 17:
+            right_code = dict.get(check_num % 11)
+            if n == right_code:
+                return num
+            else:
+                return False
+        check_num += str_to_int.get(n) * (2 ** (17 - index) % 11)
 
 def cropImgByBox(imgSrc, box):
     """

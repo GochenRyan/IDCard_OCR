@@ -118,7 +118,7 @@ $(function () {
             success: function (data) {
                 //显示解析图片
                 var path = "static\\analysisImgs\\".concat(UUID);
-                var pic = [path.concat("\\gray.jpg"),path.concat("\\binary.jpg"),path.concat("\\dilation.jpg"),path.concat("\\erosion.jpg"),path.concat("\\faceArea.jpg")];
+                var pic = [path.concat("\\gray.jpg"),path.concat("\\binary.jpg"),path.concat("\\dilation.jpg"),path.concat("\\erosion.jpg")];
                 // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\gray.jpg"))}, 1000);
                 // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\binary.jpg"))}, 1000);
                 // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\dilation.jpg"))}, 1000);
