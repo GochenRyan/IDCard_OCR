@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
-import argparse
-# import win32api
+
+import include.binaryzation as bz
+import include.functions as func
 import copy
 import uuid
-
 import cv2
 import json
-# import imutils
 import math
 import numpy as np
 import os
 import sys
 
-import include.binaryzation as bz
-import include.functions as func
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -27,8 +24,7 @@ CARD_YEAR = ''
 CARD_MON = ''
 CARD_DAY = ''
 CARD_ADDR = ''
-#身份证号码
-CARD_NUM = ''
+CARD_NUM = ''  # 身份证号码
 
 
 
@@ -212,13 +208,16 @@ def findChineseCharArea(cardNumPoint1, width, hight):
     box = np.int0(box)
     return box
 
-def detect(dirUuid,img):
+def detect(dirUuid, img):
 
     global CARD_NUM
 
     CARD_NUM = ''
 
     notFound = True
+
+    # 压缩图片
+    img = cv2.resize(img, (680, 450))
 
     # 1.  转化成灰度图
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
