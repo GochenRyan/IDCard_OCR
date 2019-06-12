@@ -385,7 +385,7 @@ def getAddrByCardNum(cardnum):
         :param cardnum:
         :return:
         """
-    print ''
+    pass
 
 def getBirthByCardNum(cardnum):
     """

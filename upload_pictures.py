@@ -48,13 +48,19 @@ def analysis():
     print upload_path[uuid]
     cardInfo = ocr.idCardOCR(uuid, upload_path[uuid])
     del upload_path[uuid]
-    # 存入数据库的图片路径进行转义
-    cardInfodb = copy.deepcopy(cardInfo)
-    cardInfodb['face'] = cardInfodb['face'].replace('\\', '\\\\')
-    dbo.inset_cardinfo(cardInfodb)
-    cardInfo = json.dumps(cardInfo, ensure_ascii=False)
-    print cardInfo
 
+    dbInfo = dbo.select_cardinfo(cardInfo)
+    if dbInfo:
+        cardInfo = json.dumps(dbInfo, ensure_ascii=False)
+        print '数据库中有该证件信息'
+        print cardInfo
+    else:
+        # 存入数据库的图片路径进行转义
+        cardInfodb = copy.deepcopy(cardInfo)
+        cardInfodb['face'] = cardInfodb['face'].replace('\\', '\\\\')
+        dbo.inset_cardinfo(cardInfodb)
+        cardInfo = json.dumps(cardInfo, ensure_ascii=False)
+        print cardInfo
 
     return cardInfo
 

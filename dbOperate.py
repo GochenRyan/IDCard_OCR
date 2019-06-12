@@ -38,3 +38,25 @@ def update_cardinfo(info):
     except:
         db.commit()
     db.close()
+
+def select_cardinfo(info):
+    db = connect_idcard_db()
+    cursor = db.cursor()
+    sql = "SELECT * FROM idcard.cardinfo WHERE idnumber='%s'" % (info['id_number'])
+    try:
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        for result in results:
+            info['id_number'] = result[0]
+            info['name'] = result[1]
+            info['sex'] = result[2]
+            info['ethnicity'] = result[3]
+            info['year'] = result[4]
+            info['month'] = result[5]
+            info['day'] = result[6]
+            info['address'] = result[7]
+            info['face'] = result[8]
+        return info
+    except:
+        return ''
+    db.close()

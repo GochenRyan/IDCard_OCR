@@ -365,7 +365,7 @@ def preprocess(dirUuid, gray, algoFunc):
 
     # 2. 二值化
     ret, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
-    func.showImg(binary, 'binary')
+    # func.showImg(binary, 'binary')
     func.storePic(dirUuid, 'binary', binary)
     #获取核大小
     calculateElement(gray)
