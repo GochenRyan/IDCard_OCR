@@ -60,6 +60,7 @@ def getCardNum(num, dirUuid,img, kenalRect):
     dilation = cv2.dilate(binary, kenal, iterations=1)
     erosion = cv2.erode(dilation, kenal, iterations=1)
 
+    # func.showImg(erosion)
     #OCR识别
     cardNum = func.ocr(erosion)
     cardNum = func.is_identi_number(cardNum)
@@ -450,7 +451,6 @@ def calculateElement(img):
     kenaly = math.ceil((width / 400.0) * 12)
     kenalx = math.ceil((kenaly / 5.0) * 4)
     a = (int(kenalx), int(kenaly))
-
     return a
 
 def preprocess(dirUuid, gray, algoFunc):

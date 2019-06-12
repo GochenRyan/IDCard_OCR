@@ -2,10 +2,9 @@
 import random
 import time
 
+import numpy as np
 import cv2
 import sys
-import math
-import numpy as np
 import os
 import uuid
 import subprocess

@@ -103,7 +103,6 @@ function show(pic){
         setTimeout(()=>show(pic),1000);
     }
     z++;
-
 }
 
 $(function () {
@@ -119,11 +118,7 @@ $(function () {
                 //显示解析图片
                 var path = "static\\analysisImgs\\".concat(UUID);
                 var pic = [path.concat("\\gray.jpg"),path.concat("\\binary.jpg"),path.concat("\\dilation.jpg"),path.concat("\\erosion.jpg")];
-                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\gray.jpg"))}, 1000);
-                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\binary.jpg"))}, 1000);
-                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\dilation.jpg"))}, 1000);
-                // setTimeout(function(){ $("#analysisImg").attr("src", path.concat("\\erosion.jpg"))}, 1000);
-
+                z = 0;
                 show(pic);
 
                 obj = JSON.parse(data);
@@ -138,6 +133,8 @@ $(function () {
                 $("#cardFace").attr("src",obj.face);
                 $("#modifyBtn").removeAttr("disabled");
                 $("#cardIDNumber").attr("readonly",true);
+
+                UUID = uuid();
             },
             error: function () {
                 alert("解析失败！");
