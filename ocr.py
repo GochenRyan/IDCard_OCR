@@ -26,26 +26,7 @@ CARD_DAY = ''
 CARD_ADDR = ''
 CARD_NUM = ''  # 身份证号码
 
-
-
-#from imutils.perspective import four_point_transform
-
-# parser = argparse.ArgumentParser()
-# parser.add_argument('image', help='path to image file')
-# args = parser.parse_args()
-
-# curpath = ''
-# if getattr(sys, 'frozen', False):
-#     curpath = os.path.dirname(sys.executable)
-# elif __file__:
-#     curpath = os.path.dirname(os.path.realpath(__file__))
-#
-# pathtoimg = r'images\w9.jpg'
-# if not os.path.isfile(pathtoimg):
-#     sys.exit("you need provid a valid imgfile")
-#     pass
-
-def getCardNum(num, dirUuid,img, kenalRect):
+def getCardNum(dirUuid,img, kenalRect):
     """
     识别并提取身份证号码
     :return:
@@ -53,6 +34,7 @@ def getCardNum(num, dirUuid,img, kenalRect):
     gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     thr = bz.myThreshold().getMinimumThreshold(gray)
     ret, binary = cv2.threshold(gray, thr, 255, cv2.THRESH_BINARY)
+    # func.showImg(binary)
 
     # 3. 膨胀和腐蚀操作的核函数
     kenal = cv2.getStructuringElement(cv2.MORPH_RECT, (kenalRect[0], kenalRect[1]))
@@ -228,179 +210,96 @@ def detect(dirUuid, img):
     # 2. 遍历二值化阈值算法
     algos = bz.myThreshold().getAlgos()
 
-    # for i in algos:
-    #
-    #     #形态学变换的预处理，得到可以查找矩形的图片
-    #     dilation = preprocess(gray, algos[i])
-    #
-    #     # 3. 查找和筛选文字区域
-    #     region = findTextRegion(dilation)
-    #
-    #     # 4. 用绿线画出这些找到的轮廓
-    #     angle = 0
-    #     for rect in region:
-    #
-    #         angle = rect[2]
-    #
-    #         #识别身份证号码
-    #         a, b = rect[1]
-    #         if a > b:
-    #             width = a
-    #             hight = b
-    #             pts2 = np.float32([[0, hight], [0, 0], [width, 0], [width, hight]])
-    #         else:
-    #             width = b
-    #             hight = a
-    #             angle = 90 + angle
-    #             pts2 = np.float32([[width, hight], [0, hight], [0, 0], [width, 0]])
-    #
-    #         #透视变换
-    #         box = cv2.cv.BoxPoints(rect)
-    #         pts1 = np.float32(box)
-    #         M = cv2.getPerspectiveTransform(pts1, pts2)
-    #         cropImg = cv2.warpPerspective(img, M, (int(width), int(hight)))
-    #
-    #         # 计算核大小
-    #         kenalx = kenaly = int(math.ceil((hight / 100.0)))
-    #         CARD_NUM = getCardNum(cropImg, (kenalx, kenaly))
-    #         if CARD_NUM:
-    #             notFound = False
-    #             #找到身份证号码，然后根据号码区域的倾斜角度，对原图进行旋转变换
-    #
-    #             if abs(angle) > 10:
-    #                 sp = img.shape
-    #                 H = sp[0]
-    #                 W = sp[1]
-    #                 M = cv2.getRotationMatrix2D((W/2, H/2), angle, 1)
-    #                 cropImg = cv2.warpAffine(img, M, (W, H))
-    #                 # cv2.namedWindow("倾斜矫正", cv2.WINDOW_NORMAL)
-    #                 # cv2.imshow("倾斜矫正", cropImg)
-    #                 # cv2.waitKey(0)
-    #                 #矫正图片地址
-    #                 global curpath
-    #                 path = 'tilt_correction.jpg'
-    #                 newFile = os.path.join(curpath, path)
-    #                 cv2.imwrite(newFile, cropImg)
-    #
-    #                 return True, '', newFile
-    #
-    #             # 画图
-    #             if DEBUG:
-    #                 cv2.drawContours(img, [np.int0(box)], 0, (0, 255, 0), 3)
-    #
-    #             # 寻找汉字区域
-    #             # 裁剪后的图片
-    #             box = cv2.cv.BoxPoints(rect)
-    #             box = np.int0(box)
-    #             cropImg, point, width, hight = func.cropImgByBox(img, box)
-    #             box = findChineseCharArea(point, width, hight)
-    #             #cv2.drawContours(img, [box], 0, (0, 255, 0), 3)
-    #
-    #             chiCharArea, point, width, hight = func.cropImgByBox(img, box)
-    #             getChineseChar(chiCharArea, (kenalx, kenaly))
-    #
-    #             # winname = "身份证号码： %s" % (CARD_NUM)
-    #             # cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
-    #             # cv2.imshow(winname, cropImg)
-    #             # cv2.waitKey(0)
-    #
-    #             break
-    #
-    #     if notFound:
-    #         continue
-    #     else:
-    #         break
+    for i in algos:
+        print "i", i
+        #形态学变换的预处理，得到可以查找矩形的图片
+        dilation = preprocess(dirUuid, gray, algos[i])
+        func.storePic(dirUuid, 'dilation', dilation)
 
-    i = 1
-    #形态学变换的预处理，得到可以查找矩形的图片
-    dilation = preprocess(dirUuid, gray, algos[i])
-    # func.showImg(dilation, 'dilation')
-    func.storePic(dirUuid, 'dilation', dilation)
+        # 3. 查找和筛选文字区域
+        region = findTextRegion(dilation)
 
-    # 3. 查找和筛选文字区域
-    region = findTextRegion(dilation)
+        # 4. 用绿线画出这些找到的轮廓
+        angle = 0
+        for rect in region:
 
-    # 4. 用绿线画出这些找到的轮廓
-    angle = 0
-    num = 0
-    for rect in region:
+            angle = rect[2]
 
-        angle = rect[2]
+            #识别身份证号码
+            a, b = rect[1]
+            if a > b:
+                width = a
+                hight = b
+                pts2 = np.float32([[0, hight], [0, 0], [width, 0], [width, hight]])
+            else:
+                width = b
+                hight = a
+                angle = 90 + angle
+                pts2 = np.float32([[width, hight], [0, hight], [0, 0], [width, 0]])
 
-        #识别身份证号码
-        a, b = rect[1]
-        if a > b:
-            width = a
-            hight = b
-            pts2 = np.float32([[0, hight], [0, 0], [width, 0], [width, hight]])
-        else:
-            width = b
-            hight = a
-            angle = 90 + angle
-            pts2 = np.float32([[width, hight], [0, hight], [0, 0], [width, 0]])
-
-        #透视变换
-        # box = cv2.cv.BoxPoints(rect)
-        box = cv2.boxPoints(rect)
-        pts1 = np.float32(box)
-        M = cv2.getPerspectiveTransform(pts1, pts2)
-        cropImg = cv2.warpPerspective(img, M, (int(width), int(hight)))
-        # 计算核大小
-        kenalx = kenaly = int(math.ceil((hight / 100.0)))
-        CARD_NUM = getCardNum(num, dirUuid, cropImg, (kenalx, kenaly))
-        num = num + 1
-        if CARD_NUM:
-            notFound = False
-            #找到身份证号码，然后根据号码区域的倾斜角度，对原图进行旋转变换
-
-            if abs(angle) > 10:
-                sp = img.shape
-                H = sp[0]
-                W = sp[1]
-                M = cv2.getRotationMatrix2D((W/2, H/2), angle, 1)
-                cropImg = cv2.warpAffine(img, M, (W, H))
-                # cv2.namedWindow("倾斜矫正", cv2.WINDOW_NORMAL)
-                # cv2.imshow("倾斜矫正", cropImg)
-                # cv2.waitKey(0)
-                #矫正图片地址
-                global curpath
-                path = 'tilt_correction.jpg'
-                newFile = os.path.join(curpath, path)
-                cv2.imwrite(newFile, cropImg)
-
-                return True, '', newFile, ''
-
-            # 画图
-            if DEBUG:
-                cv2.drawContours(img, [np.int0(box)], 0, (0, 255, 0), 3)
-
-            # 寻找汉字区域
-            # 裁剪后的图片5
+            #透视变换
+            # box = cv2.cv.BoxPoints(rect)
             box = cv2.boxPoints(rect)
-            box = np.int0(box)
-            # 寻找人脸区域
-            faceBox = cv2.boxPoints(rect)
-            faceBox = np.int0(faceBox)
+            pts1 = np.float32(box)
+            M = cv2.getPerspectiveTransform(pts1, pts2)
+            cropImg = cv2.warpPerspective(img, M, (int(width), int(hight)))
 
-            cropImg, point, width, hight = func.cropImgByBox(img, box)
-            box = findChineseCharArea(point, width, hight)
-            faceBox = findFaceArea(point, width, hight)
-            #cv2.drawContours(img, [box], 0, (0, 255, 0), 3)
+            # 计算核大小
+            kenalx = kenaly = int(math.ceil((hight / 100.0)))
+            CARD_NUM = getCardNum(dirUuid, cropImg, (kenalx, kenaly))
+            if CARD_NUM:
+                print '识别出号码了!!!'
+                notFound = False
+                #找到身份证号码，然后根据号码区域的倾斜角度，对原图进行旋转变换
 
-            chiCharArea, point, width, hight = func.cropImgByBox(img, box)
-            # func.showImg(chiCharArea, 'chiCharArea')
-            getChineseChar(dirUuid, chiCharArea, (kenalx, kenaly))
+                if abs(angle) > 10:
+                    sp = img.shape
+                    H = sp[0]
+                    W = sp[1]
+                    M = cv2.getRotationMatrix2D((W/2, H/2), angle, 1)
+                    cropImg = cv2.warpAffine(img, M, (W, H))
+                    # cv2.namedWindow("倾斜矫正", cv2.WINDOW_NORMAL)
+                    # cv2.imshow("倾斜矫正", cropImg)
+                    # cv2.waitKey(0)
+                    #矫正图片地址
+                    global curpath
+                    path = 'tilt_correction.jpg'
+                    newFile = os.path.join(curpath, path)
+                    cv2.imwrite(newFile, cropImg)
 
-            faceArea, _, _, _ = func.cropImgByBox(img, faceBox)
-            # func.showImg(faceArea, 'faceArea')
-            func.storePic(dirUuid, 'faceArea', faceArea)
+                    return True, '', newFile, ''
 
-            # winname = "身份证号码： %s" % (CARD_NUM)
-            # cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
-            # cv2.imshow(winname, cropImg)
-            # cv2.waitKey(0)
+                # 画图
+                if DEBUG:
+                    cv2.drawContours(img, [np.int0(box)], 0, (0, 255, 0), 3)
 
-            break
+                # 寻找汉字区域
+                # 裁剪后的图片5
+                box = cv2.boxPoints(rect)
+                box = np.int0(box)
+                # 寻找人脸区域
+                faceBox = cv2.boxPoints(rect)
+                faceBox = np.int0(faceBox)
+
+                cropImg, point, width, hight = func.cropImgByBox(img, box)
+                box = findChineseCharArea(point, width, hight)
+                faceBox = findFaceArea(point, width, hight)
+                #cv2.drawContours(img, [box], 0, (0, 255, 0), 3)
+
+                chiCharArea, point, width, hight = func.cropImgByBox(img, box)
+                # func.showImg(chiCharArea, 'chiCharArea')
+                getChineseChar(dirUuid, chiCharArea, (kenalx, kenaly))
+
+                faceArea, _, _, _ = func.cropImgByBox(img, faceBox)
+                # func.showImg(faceArea, 'faceArea')
+                func.storePic(dirUuid, 'faceArea', faceArea)
+
+                # winname = "身份证号码： %s" % (CARD_NUM)
+                # cv2.namedWindow(winname, cv2.WINDOW_NORMAL)
+                # cv2.imshow(winname, cropImg)
+                # cv2.waitKey(0)
+
+                break
 
         if notFound:
             continue
@@ -466,7 +365,7 @@ def preprocess(dirUuid, gray, algoFunc):
 
     # 2. 二值化
     ret, binary = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
-    # func.showImg(binary, 'binary')
+    func.showImg(binary, 'binary')
     func.storePic(dirUuid, 'binary', binary)
     #获取核大小
     calculateElement(gray)

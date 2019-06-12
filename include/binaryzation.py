@@ -174,12 +174,14 @@ class myThreshold:
         :return:
         """
 
+
+
         algos = {
-            0: 'getMinimumThreshold',  # 谷底最小值
-            1: 'get1DMaxEntropyThreshold',  # 一维最大熵
-            2: 'getIsoDataThreshold',  # intermeans
-            # 3: 'getKittlerMinError', #kittler 最小错误
-            4: 'getIntermodesThreshold',  # 双峰平均值的阈值
+            0: 'get1DMaxEntropyThreshold',  # 一维最大熵
+            1: 'getIsoDataThreshold',  # intermeans
+            2: 'getMinimumThreshold',  # 谷底最小值
+            3: 'getIntermodesThreshold',  # 双峰平均值的阈值
+            # 4: 'getKittlerMinError', #kittler 最小错误
         }
 
         return algos
