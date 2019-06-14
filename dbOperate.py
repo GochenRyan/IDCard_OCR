@@ -46,17 +46,19 @@ def select_cardinfo(info):
     try:
         cursor.execute(sql)
         results = cursor.fetchall()
+        m_info = {}
         for result in results:
-            info['id_number'] = result[0]
-            info['name'] = result[1]
-            info['sex'] = result[2]
-            info['ethnicity'] = result[3]
-            info['year'] = result[4]
-            info['month'] = result[5]
-            info['day'] = result[6]
-            info['address'] = result[7]
-            info['face'] = result[8]
-        return info
+            m_info['id_number'] = result[0]
+            m_info['name'] = result[1]
+            m_info['sex'] = result[2]
+            m_info['ethnicity'] = result[3]
+            m_info['year'] = result[4]
+            m_info['month'] = result[5]
+            m_info['day'] = result[6]
+            m_info['address'] = result[7]
+            m_info['face'] = result[8]
+        db.close()
+        return m_info
     except:
+        db.close()
         return ''
-    db.close()

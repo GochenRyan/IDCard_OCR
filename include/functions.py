@@ -19,6 +19,7 @@ def ver_addr(addr):
     """
     unitList = {'号','单','栋','幢','室','组','户','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'}
     i = 0
+    isRight = 1
     # 检验地址中数字后的单位
     while i < len(addr):
         #遍历到数字
@@ -29,7 +30,9 @@ def ver_addr(addr):
         else:
             if i + 3 < len(addr) and addr[i + 1:i + 4] not in unitList:
                 print '单位错误： ' + addr[i + 1:i + 4] + '，请校准。'
+                isRight = 0
             i = i + 4
+    return isRight
 
 
 def is_number(s):
@@ -101,17 +104,6 @@ def cropImgByBox(imgSrc, box):
     # fileAddr = 'B:\\CropImg\\' + saveTime + '.jpg'
     # cv2.imwrite(fileAddr, cropImg)
     return cropImg, (x1, y1), width, hight
-
-
-# def ishan(text):
-#     # for python 2.x, 3.3+
-#     # sample: ishan(u'一') == True, ishan(u'我&&你') == False
-#     return all(u'\u4e00' <= char <= u'\u9fff' for char in text)
-
-# def ishan(text):
-#     # for python 2.x, 3.3+
-#     # sample: ishan(u'一') == True, ishan(u'我&&你') == False
-#     return (u'\u4e00' <= text[0] <= u'\u9fff')
 
 def delSpaceLine(text):
     """

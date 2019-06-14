@@ -1,14 +1,3 @@
-// var info = document.getElementById('idCard').getAttribute('d');
-// obj = JSON.parse(info);
-// document.getElementById('cardName').innerHTML = obj.name;
-// document.getElementById('cardSex').innerHTML = obj.sex;
-// document.getElementById('cardEthnicity').innerHTML = obj.ethnicity;
-// document.getElementById('cardYear').innerHTML = obj.year;
-// document.getElementById('cardMonth').innerHTML = obj.month;
-// document.getElementById('cardDay').innerHTML = obj.day;
-// document.getElementById('cardAddress').innerHTML = obj.address;
-// document.getElementById('cardIDNumber').innerHTML = obj.id_number;
-
 if (typeof FileReader == 'undefined') {
     alert("当前浏览器不支持FileReader接口");
     //使选择控件不可操作
@@ -133,6 +122,12 @@ $(function () {
                 $("#cardFace").attr("src",obj.face);
                 $("#modifyBtn").removeAttr("disabled");
                 $("#cardIDNumber").attr("readonly",true);
+                // alert(obj.addrTrue);
+                //单位出错
+                if(obj.addrTrue == 0){
+                    // alert("地址错误");
+                     $("#cardAddress").css("border","1px solid red")
+                }
 
                 UUID = uuid();
             },

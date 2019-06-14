@@ -2,6 +2,7 @@
 import copy
 
 from flask import Flask, render_template, request
+import include.functions as func
 import os
 import json
 import ocr
@@ -51,14 +52,19 @@ def analysis():
 
     dbInfo = dbo.select_cardinfo(cardInfo)
     if dbInfo:
+        addrTrue = func.ver_addr(dbInfo['address'])
+        dbInfo['addrTrue'] = addrTrue
+        # print "addrTrue1", addrTrue
         cardInfo = json.dumps(dbInfo, ensure_ascii=False)
-        print '数据库中有该证件信息'
         print cardInfo
     else:
         # 存入数据库的图片路径进行转义
         cardInfodb = copy.deepcopy(cardInfo)
         cardInfodb['face'] = cardInfodb['face'].replace('\\', '\\\\')
         dbo.inset_cardinfo(cardInfodb)
+        addrTrue = func.ver_addr(cardInfodb['address'])
+        # print "addrTrue2", addrTrue
+        cardInfo['addrTrue'] = addrTrue
         cardInfo = json.dumps(cardInfo, ensure_ascii=False)
         print cardInfo
 
